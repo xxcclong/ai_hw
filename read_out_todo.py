@@ -45,7 +45,6 @@ while True:
     MAX = {}
     max_before = {}
     i = 0
-    print(len(hanzibiao))
     while i < len(hanzibiao):
         if i == 0:
             for item in hanzibiao[i]:
@@ -77,58 +76,13 @@ while True:
                 maxstr = max_before[maxstr+str(k)]
                 k = k-1
             j = len(OutOut) - 1
+            answer = []
             while j >= 0:
-                print(OutOut[j])
+                answer.append(OutOut[j])
                 j = j - 1
+            print(answer)
         i = i + 1
                 
 
 
 
-    print('begin second count')
-    first = input_list[0]
-    max_all = 0
-    Output = []
-    for item in ping_han_dict[first]:
-        former = item
-        i = 1
-        this_poss = 1
-        thischuan = []
-        thischuan.append(former)
-        while i < len(input_list):
-            all_hanzi = ping_han_dict[input_list[i]]
-            max_j = ''
-            max_pos = 0
-            for j in all_hanzi:
-                my_pos = concu_pos(former, j)
-                if my_pos > max_pos:
-                    max_pos = my_pos
-                    max_j = j
-            i = i + 1
-            thischuan.append(max_j)
-            former = max_j
-            this_poss = this_poss * max_pos
-           # print(this_poss)
-           # print(thischuan)
-        if this_poss > max_all:
-            max_all = this_poss
-            Output = thischuan
-    ui = 0
-    the_former = ''
-    '''
-    for item in Output:
-        print(item)
-        if ui == 0:
-            the_former = item
-            ui = 1
-            continue
-        if (the_former + item ) in model2:
-            print(the_former + item + ' ' + str(model2[the_former+ item]))
-        else:
-            print("no " + the_former + item)
-        the_former = item
-        '''
-    outstr = ''
-    for item in Output:
-        outstr = outstr + item
-    print("**************"+outstr)
