@@ -1,26 +1,53 @@
 import time
 import math
 import json
-def concu_pos(w2, w1,w0 = '', t = 0.95): # 两个汉字 
+def concu_pos(w2, w1,w0 = '', t = 0.6, y = 0.3): # 两个汉字 
     global model1, model2, word_model, ALL, model3
   #  if (w1 + w2) in word_model:
    #     return 1 - (0.5) ** word_model[w1+w2]
 #    print(w1 + w2)
     W0W1W2, W0W1, W1W2, W1, W2
-    if (w0 + w1 + w2) in model2:
-        W0W1W2 = model2[w0 + w1 + w2] 
-    else: 
-        W0W1W2 = 0
-    if w1 not in model1:
-        fenmu = 9999999
+    distance
+    if w0 != '':
+        if (w0 + w1 + w2) in model3:
+            W0W1W2 = model2[w0 + w1 + w2] 
+        else: 
+            W0W1W2 = 0
+        if (w0+w1) in model2:
+            W0W1 = model2[w0+w1]
+        else:
+            W0W1 = 9999999
+        if (w1+w2) in model2:
+            W1W2 = model2[w1+w2]
+        else:
+            W1W2 = 0
+        if w1 in model1:
+            W1 = model1[w1]
+        else:
+            W1 = 9999999
+        if w2 in model1:
+            W2 = model1[w2]
+        else:
+            W2 = 0
+        distance = t * W0W1W2 / W0W1 + y * W1W2 / W1 + (1 - t - y)*W2 / ALL
     else:
-        fenmu = model1[w1]
-    moreover = 0
-    if w2 in model1:
-        moreover = model1[w2] / ALL
-    if ((fenzi / fenmu)*t + moreover * (1- t) )== 0:
+        if (w1+w2) in model2:
+            W1W2 = model2[w1+w2]
+        else:
+            W1W2 = 0
+        if w1 in model1:
+            W1 = model1[w1]
+        else:
+            W1 = 9999999
+        if w2 in model1:
+            W2 = model1[w2]
+        else:
+            W2 = 0
+            distance = (t+y) * W1W2 / W1 + (1 - t - y) * W2 / ALL
+    if distance == 0:
         return 1e-8
-    return (fenzi / fenmu)*t + moreover*(1-t)
+    else:
+        return distance
 
 file2 = open('two_model.json','r')
 file1 = open('one_model.json','r')
