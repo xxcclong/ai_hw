@@ -1,6 +1,6 @@
 import math
 import json
-def concu_pos(w1, w2, t = 0.5): # 两个汉字 
+def concu_pos(w1, w2, t = 0.5 ): # 两个汉字 
     global model1, model2, word_model, ALL
   #  if (w1 + w2) in word_model:
    #     return 1 - (0.5) ** word_model[w1+w2]
@@ -25,6 +25,8 @@ def concu_pos(w1, w2, t = 0.5): # 两个汉字
 file2 = open('two_model.json','r')
 file1 = open('one_model.json','r')
 file3 = open('words_model.json', 'r')
+file3yuan = open('three_model.json','r')
+model3 = json.load(file3yuan)
 word_model = json.load(file3)
 model1 = json.load(file1)
 model2 = json.load(file2)

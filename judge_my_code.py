@@ -1,14 +1,16 @@
 import time
 import math
 import json
-def concu_pos(w1, w2, t = 0.5): # 两个汉字 
-    global model1, model2, word_model, ALL
+def concu_pos(w2, w1,w0 = '', t = 0.95): # 两个汉字 
+    global model1, model2, word_model, ALL, model3
   #  if (w1 + w2) in word_model:
    #     return 1 - (0.5) ** word_model[w1+w2]
 #    print(w1 + w2)
-    if (w1 + w2) in model2:
-        fenzi = model2[w1 + w2]
-    else: fenzi = 0
+    W0W1W2, W0W1, W1W2, W1, W2
+    if (w0 + w1 + w2) in model2:
+        W0W1W2 = model2[w0 + w1 + w2] 
+    else: 
+        W0W1W2 = 0
     if w1 not in model1:
         fenmu = 9999999
     else:
@@ -20,18 +22,18 @@ def concu_pos(w1, w2, t = 0.5): # 两个汉字
         return 1e-8
     return (fenzi / fenmu)*t + moreover*(1-t)
 
-
-
-
 file2 = open('two_model.json','r')
 file1 = open('one_model.json','r')
+file_th = open('three_model.json','r')
+
 file3 = open('words_model.json', 'r')
 filej = open('judge12.json','r')
-now ='result'+ time.strftime("%H:%M:%S")
+now ='result'+ time.asctime( time.localtime(time.time()) )
 file_score = open(now,'w')
 word_model = json.load(file3)
 model1 = json.load(file1)
 model2 = json.load(file2)
+model3 = json.load(file_th)
 judge = json.load(filej)
 file1.close()
 file2.close()
@@ -41,14 +43,10 @@ file_dict.close()
 ALL = 0
 for k in model1:
     ALL = ALL + model1[k]
-
-
 allwords = 0
 rightwords = 0
 allsten = 0
 rightsten = 0
-
-
 for ju in judge:
     input_list = ju['pinyin']
     allwords = allwords + len(input_list)
@@ -86,8 +84,13 @@ for ju in judge:
         for item1 in hanzibiao[i]:
             now_max = -9999999
             for item2 in hanzibiao[i-1]:
-                if (MAX[item2+str(i-1)] + math.log(concu_pos(item2, item1)) > now_max):
-                    now_max = MAX[item2+str(i-1)] + math.log(concu_pos(item2, item1))
+                distance = 0
+                if i > 2:
+                    distance = math.log(concu_pos(item1, item2, max_before[item2+str(i-1)])) + MAX[item2+str(i-1)]
+                else:
+                    distance = math.log(concu_pos(item1, item2)) + MAX[item2+str(i-1)]
+                if (distance  > now_max):
+                    now_max = distance
                     max_before[item1+str(i)] = item2
             MAX[item1+str(i)] = now_max
         if i == len(hanzibiao) - 1:
@@ -118,14 +121,16 @@ for ju in judge:
                     right_sig = 0
             if right_sig == 1:
                 rightsten = rightsten + 1
-            else:
-                file_score.write(ju['han'] + '\n')
-                file_score.write(out_str+'\n')
+#            else:
+ #               file_score.write(ju['han'] + '\n')
+  #              file_score.write(out_str+'\n')
 
         i = i + 1
                 
 file_score.write(str(allwords) + ' ' + str(rightwords) + ' '+ str(rightwords / allwords)+'\n')
 file_score.write(str(allsten)+' '+str(rightsten)+' '+str(rightsten / allsten)+'\n')
+file_score.write('0.9')
+file_score.write(time.asctime( time.localtime(time.time()) ))
 file_score.close()
 
 
