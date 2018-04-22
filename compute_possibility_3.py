@@ -2,7 +2,7 @@ import json
 file12 = open('yierji.txt','r')
 all_str = file12.read()
 model3 = {}
-for i in range(1,12):
+for i in range(1,10):
     F = open('sina/2016-%02d'%(i),'r')
     i = i + 1
     news_list = json.load(F)
@@ -27,6 +27,6 @@ for i in range(1,12):
             former1 = former2
             former2 = hanzi
     F.close()
-write_file = open('three_model.json','w')
+write_file = open('part_three_model.json','w')
 json.dump(model3, write_file)
 write_file.close()

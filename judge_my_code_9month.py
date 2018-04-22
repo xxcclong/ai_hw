@@ -14,7 +14,8 @@ def concu_pos(w2, w1,w0 = '', t = 0.6, y = 0.3): # 两个汉字
     distance = 0
 
 
-#   eryuam w0 = ''
+#   eryuam 
+    w0 = ''
 #   eryuan
 
     if w0 != '':
@@ -58,15 +59,15 @@ def concu_pos(w2, w1,w0 = '', t = 0.6, y = 0.3): # 两个汉字
     else:
         return distance
 
-file2 = open('two_model.json','r')
-file1 = open('one_model.json','r')
-file_th = open('three_model.json','r')
+file2 = open('part_two_model.json','r')
+file1 = open('part_one_model.json','r')
+file_th = open('part_three_model.json','r')
 
 file3 = open('words_model.json', 'r')
 filej = open('judge12.json','r')
 t = 0.8
 y = 0.1
-now ='result_t='+str(t)+'y='+str(y)+ time.asctime( time.localtime(time.time()))+ 'news_judgement'+'_eryuan' 
+now ='result_t='+str(t)+'y='+str(y)+ time.asctime( time.localtime(time.time()))+ 'news_judgement'+'_2yuan_partdata' 
 file_score = open(now,'w')
 word_model = json.load(file3)
 model1 = json.load(file1)

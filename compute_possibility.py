@@ -3,9 +3,9 @@ file_list = []
 i = 1
 all_dict = {}
 two_dict = {}
-file12 = open("../pingyin12710172/yierji.txt",'r')
+file12 = open("yierji.txt",'r')
 all_str = file12.read()
-while i<12:
+while i<10:
     F = open("sina/2016-%02d"%(i),'r')
     i = i + 1
     news_list = json.load(F)
@@ -27,9 +27,9 @@ while i<12:
                    two_dict[two_model] = 1 
             former_one = hanzi
     F.close()
-write_file1 = open('one_model.json','w')
+write_file1 = open('part_one_model.json','w')
 json.dump(all_dict, write_file1)
 write_file1.close()
-write_file2 = open('two_model.json','w')
+write_file2 = open('part_two_model.json','w')
 json.dump(two_dict, write_file2)
 write_file2.close()
