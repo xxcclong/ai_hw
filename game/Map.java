@@ -36,9 +36,9 @@ public class Map
     Coord[] hole = new Coord[Params.holeNum];
     Coord[] egg = new Coord[Params.eggNum];
     Coord[] wall = new Coord[Params.wallNum];
-    int whoAmI = -1;
+    int whoAmI = 1;
     boolean gameContinue = true;
-    boolean stopped = true;
+    boolean stopped; //= true;
     Socket sock;
     static BufferedReader fromServer;
     static DataOutputStream toServer;
@@ -350,17 +350,19 @@ public class Map
         initWall();
         initEgg();
         initHole();
-        try {
-            sock = new Socket("127.0.0.1", 8888);
-            fromServer = new BufferedReader(new InputStreamReader(sock.getInputStream()));
-            toServer = new DataOutputStream(sock.getOutputStream());
-            whoAmI = Integer.parseInt(fromServer.readLine());
-            System.out.println("finish init client, id is " + whoAmI);
-            stopped = false;
-        }catch (IOException e){
-            System.out.println("fail to init sock");
-        }
+        if(Params.ifComm) {
+            try {
+                sock = new Socket("127.0.0.1", 8888);
+                fromServer = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+                toServer = new DataOutputStream(sock.getOutputStream());
+                whoAmI = Integer.parseInt(fromServer.readLine());
+                System.out.println("finish init client, id is " + whoAmI);
+                stopped = false;
+            } catch (IOException e) {
+                System.out.println("fail to init sock");
 
+            }
+        }
     }
 
     public void initMap(int size)

@@ -5,6 +5,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.renderable.RenderableImage;
 import java.io.DataInput;
 import java.io.File;
@@ -64,6 +66,18 @@ public class GamePanel extends JPanel implements Runnable
             g.drawImage(i, r.x, 0, r.w, Params.gridSize,this);
             return;
         }
+        //g.drawImage(i, r.x,r.y,r.w, r.h, this);
+        Rectangle2D rect = new Rectangle2D.Double(r.x, r.y, r.w, r.h);
+        Graphics2D g2 = (Graphics2D) g;
+        //g2.draw(rect);
+// 画rect的内切椭圆
+        Ellipse2D ellipse = new Ellipse2D.Double();
+        ellipse.setFrame(rect);
+        g2.setColor(Color.cyan);
+        g2.fill(ellipse);
+    }
+    private void drawTail(Image i, Region r, Graphics g)
+    {
         g.drawImage(i, r.x,r.y,r.w, r.h, this);
     }
 
@@ -134,20 +148,33 @@ public class GamePanel extends JPanel implements Runnable
 
     public void drawSnake(int index, Graphics g)
     {
+        Image inHead, inBody, inTail;
+        if(index == 0)
+        {
+            inHead = head1;
+            inBody = bodyPic;
+            inTail = bodyPic;
+        }
+        else
+        {
+            inHead = head2;
+            inBody = bodyPic2;
+            inTail = bodyPic2;
+        }
         for(int i = 0;i<m.s[index].body.size();++i)
         {
             if(i == 0) // tail
             {
-                Region r = setTailRegion(0, m.s[index].getTail());
-                drawHead(bodyPic, r, g);
+                Region r = setTailRegion(index, m.s[index].getTail());
+                drawTail(inBody, r, g);
             }
             else if(i == m.s[index].body.size() - 1)
             {
                 Region r;
-                g.drawImage(head1, m.s[index].body.get(i).x  * Params.gridSize , m.s[index].body.get(i).y  * Params.gridSize, Params.gridSize,Params.gridSize, this);
-                Coord temp = m.getNext(0);
-                r = setRegion(0, temp);
-                drawHead(head1, r, g);
+                g.drawImage(inHead, m.s[index].body.get(i).x  * Params.gridSize , m.s[index].body.get(i).y  * Params.gridSize, Params.gridSize,Params.gridSize, this);
+                Coord temp = m.getNext(index);
+                r = setRegion(index, temp);
+                drawHead(inHead, r, g);
             }
             else
             {
@@ -156,7 +183,6 @@ public class GamePanel extends JPanel implements Runnable
                 Direction d1, d2;
                 if(m.s[index].body.get(i - 1).inTheHole())
                 {
-
                     d1 = m.hole[m.s[index].formerHole].isOf(m.s[index].body.get(i));
                 }
                 else
@@ -169,38 +195,42 @@ public class GamePanel extends JPanel implements Runnable
                     d2 = m.s[index].body.get(i + 1).isOf(m.s[index].body.get(i));
                 if((d1 == Direction.UP && d2 == Direction.LEFT) || (d1 == Direction.LEFT && d2 == Direction.UP))
                 {
-                    g.drawImage(bodyPic, m.s[index].body.get(i).x * Params.gridSize +  (Params.gridSize - Params.thinGridSize) / 2, m.s[index].body.get(i).y * Params.gridSize + (Params.gridSize - Params.thinGridSize) / 2, Params.thinGridSize, Params.thinGridSize, this);
+                    //g.drawImage(inBody, m.s[index].body.get(i).x * Params.gridSize +  (Params.gridSize - Params.thinGridSize) / 2, m.s[index].body.get(i).y * Params.gridSize + (Params.gridSize - Params.thinGridSize) / 2, Params.thinGridSize, Params.thinGridSize, this);
                     //up
-                    g.drawImage(bodyPic, m.s[index].body.get(i).x * Params.gridSize +  (Params.gridSize - Params.thinGridSize) / 2, m.s[index].body.get(i).y * Params.gridSize , Params.thinGridSize, (Params.gridSize - Params.thinGridSize) / 2, this);
+                    //g.drawImage(inBody, m.s[index].body.get(i).x * Params.gridSize +  (Params.gridSize - Params.thinGridSize) / 2, m.s[index].body.get(i).y * Params.gridSize , Params.thinGridSize, (Params.gridSize - Params.thinGridSize) / 2, this);
                     //left
-                    g.drawImage(bodyPic, m.s[index].body.get(i).x * Params.gridSize , m.s[index].body.get(i).y * Params.gridSize + (Params.gridSize - Params.thinGridSize) / 2, (Params.gridSize - Params.thinGridSize) / 2, Params.thinGridSize, this);
+                    //g.drawImage(inBody, m.s[index].body.get(i).x * Params.gridSize , m.s[index].body.get(i).y * Params.gridSize + (Params.gridSize - Params.thinGridSize) / 2, (Params.gridSize - Params.thinGridSize) / 2, Params.thinGridSize, this);
+                    g.fillArc((m.s[index].body.get(i).x-1) * Params.gridSize ,(m.s[index].body.get(i).y -1)* Params.gridSize ,2*Params.gridSize,2*Params.gridSize,270,90);
                 }
                 else if((d1 == Direction.UP && d2 == Direction.RIGHT) || (d1 == Direction.RIGHT && d2 == Direction.UP))
                 {
-                    g.drawImage(bodyPic, m.s[index].body.get(i).x * Params.gridSize +  (Params.gridSize - Params.thinGridSize) / 2, m.s[index].body.get(i).y * Params.gridSize + (Params.gridSize - Params.thinGridSize) / 2, Params.thinGridSize, Params.thinGridSize, this);
-                    g.drawImage(bodyPic, m.s[index].body.get(i).x * Params.gridSize +  (Params.gridSize - Params.thinGridSize) / 2, m.s[index].body.get(i).y * Params.gridSize , Params.thinGridSize, (Params.gridSize - Params.thinGridSize) / 2, this);
-                    g.drawImage(bodyPic, m.s[index].body.get(i).x * Params.gridSize +  (Params.gridSize + Params.thinGridSize) / 2, m.s[index].body.get(i).y * Params.gridSize + (Params.gridSize - Params.thinGridSize) / 2,(Params.gridSize - Params.thinGridSize) / 2,Params.thinGridSize,this);
+                    //g.drawImage(inBody, m.s[index].body.get(i).x * Params.gridSize +  (Params.gridSize - Params.thinGridSize) / 2, m.s[index].body.get(i).y * Params.gridSize + (Params.gridSize - Params.thinGridSize) / 2, Params.thinGridSize, Params.thinGridSize, this);
+                    //g.drawImage(inBody, m.s[index].body.get(i).x * Params.gridSize +  (Params.gridSize - Params.thinGridSize) / 2, m.s[index].body.get(i).y * Params.gridSize , Params.thinGridSize, (Params.gridSize - Params.thinGridSize) / 2, this);
+                    //g.drawImage(inBody, m.s[index].body.get(i).x * Params.gridSize +  (Params.gridSize + Params.thinGridSize) / 2, m.s[index].body.get(i).y * Params.gridSize + (Params.gridSize - Params.thinGridSize) / 2,(Params.gridSize - Params.thinGridSize) / 2,Params.thinGridSize,this);
+                    g.fillArc((m.s[index].body.get(i).x) * Params.gridSize ,(m.s[index].body.get(i).y -1)* Params.gridSize ,2*Params.gridSize,2*Params.gridSize,180,90);
                 }
                 else if((d1 == Direction.DOWN && d2 == Direction.RIGHT) || (d1 == Direction.RIGHT && d2 == Direction.DOWN))
                 {
-                    g.drawImage(bodyPic, m.s[index].body.get(i).x * Params.gridSize +  (Params.gridSize - Params.thinGridSize) / 2, m.s[index].body.get(i).y * Params.gridSize + (Params.gridSize - Params.thinGridSize) / 2, Params.thinGridSize, Params.thinGridSize, this);
-                    g.drawImage(bodyPic, m.s[index].body.get(i).x * Params.gridSize +  (Params.gridSize - Params.thinGridSize) / 2, m.s[index].body.get(i).y * Params.gridSize + (Params.gridSize + Params.thinGridSize) / 2, Params.thinGridSize, (Params.gridSize - Params.thinGridSize) / 2, this);
-                    g.drawImage(bodyPic, m.s[index].body.get(i).x * Params.gridSize +  (Params.gridSize + Params.thinGridSize) / 2, m.s[index].body.get(i).y * Params.gridSize + (Params.gridSize - Params.thinGridSize) / 2,(Params.gridSize - Params.thinGridSize) / 2, Params.thinGridSize,this);
+                    //g.drawImage(inBody, m.s[index].body.get(i).x * Params.gridSize +  (Params.gridSize - Params.thinGridSize) / 2, m.s[index].body.get(i).y * Params.gridSize + (Params.gridSize - Params.thinGridSize) / 2, Params.thinGridSize, Params.thinGridSize, this);
+                    //g.drawImage(inBody, m.s[index].body.get(i).x * Params.gridSize +  (Params.gridSize - Params.thinGridSize) / 2, m.s[index].body.get(i).y * Params.gridSize + (Params.gridSize + Params.thinGridSize) / 2, Params.thinGridSize, (Params.gridSize - Params.thinGridSize) / 2, this);
+                    //g.drawImage(inBody, m.s[index].body.get(i).x * Params.gridSize +  (Params.gridSize + Params.thinGridSize) / 2, m.s[index].body.get(i).y * Params.gridSize + (Params.gridSize - Params.thinGridSize) / 2,(Params.gridSize - Params.thinGridSize) / 2, Params.thinGridSize,this);
+                    g.fillArc((m.s[index].body.get(i).x) * Params.gridSize ,(m.s[index].body.get(i).y)* Params.gridSize ,2*Params.gridSize,2*Params.gridSize,90,90);
                 }
                 else if((d1 == Direction.DOWN && d2 == Direction.LEFT) || (d1 == Direction.LEFT && d2 == Direction.DOWN))
                 {
-                    g.drawImage(bodyPic, m.s[index].body.get(i).x * Params.gridSize +  (Params.gridSize - Params.thinGridSize) / 2, m.s[index].body.get(i).y * Params.gridSize + (Params.gridSize - Params.thinGridSize) / 2, Params.thinGridSize, Params.thinGridSize, this);
-                    g.drawImage(bodyPic, m.s[index].body.get(i).x * Params.gridSize +  (Params.gridSize - Params.thinGridSize) / 2, m.s[index].body.get(i).y * Params.gridSize + (Params.gridSize + Params.thinGridSize) / 2, Params.thinGridSize, (Params.gridSize - Params.thinGridSize) / 2, this);
-                    g.drawImage(bodyPic, m.s[index].body.get(i).x * Params.gridSize , m.s[index].body.get(i).y * Params.gridSize + (Params.gridSize - Params.thinGridSize) / 2, (Params.gridSize - Params.thinGridSize) / 2, Params.thinGridSize, this);
+                    //g.drawImage(inBody, m.s[index].body.get(i).x * Params.gridSize +  (Params.gridSize - Params.thinGridSize) / 2, m.s[index].body.get(i).y * Params.gridSize + (Params.gridSize - Params.thinGridSize) / 2, Params.thinGridSize, Params.thinGridSize, this);
+                    //g.drawImage(inBody, m.s[index].body.get(i).x * Params.gridSize +  (Params.gridSize - Params.thinGridSize) / 2, m.s[index].body.get(i).y * Params.gridSize + (Params.gridSize + Params.thinGridSize) / 2, Params.thinGridSize, (Params.gridSize - Params.thinGridSize) / 2, this);
+                    //g.drawImage(inBody, m.s[index].body.get(i).x * Params.gridSize , m.s[index].body.get(i).y * Params.gridSize + (Params.gridSize - Params.thinGridSize) / 2, (Params.gridSize - Params.thinGridSize) / 2, Params.thinGridSize, this);
+                    g.fillArc((m.s[index].body.get(i).x-1) * Params.gridSize ,(m.s[index].body.get(i).y)* Params.gridSize ,2*Params.gridSize,2*Params.gridSize,0,90);
                 }
                 else if(d1 == Direction.DOWN || d1 == Direction.UP)
                 {
-                    g.drawImage(bodyPic, m.s[index].body.get(i).x * Params.gridSize + (Params.gridSize - Params.thinGridSize) / 2, m.s[index].body.get(i).y * Params.gridSize, Params.thinGridSize, Params.gridSize, this);
+                    g.drawImage(inBody, m.s[index].body.get(i).x * Params.gridSize + (Params.gridSize - Params.thinGridSize) / 2, m.s[index].body.get(i).y * Params.gridSize, Params.thinGridSize, Params.gridSize, this);
 
                 }
                 else
                 {
-                    g.drawImage(bodyPic, m.s[index].body.get(i).x * Params.gridSize, m.s[index].body.get(i).y * Params.gridSize + (Params.gridSize - Params.thinGridSize) / 2, Params.gridSize, Params.thinGridSize, this);
+                    g.drawImage(inBody, m.s[index].body.get(i).x * Params.gridSize, m.s[index].body.get(i).y * Params.gridSize + (Params.gridSize - Params.thinGridSize) / 2, Params.gridSize, Params.thinGridSize, this);
                 }
             }
         }
@@ -211,6 +241,7 @@ public class GamePanel extends JPanel implements Runnable
         super.paint(g);
         g.drawImage(bg,0,0,Params.panelSize, Params.panelSize,this);
         drawSnake(0, g);
+        drawSnake(1, g);
         for(int i = 0;i<m.mapSize;++i)
             for(int j = 0;j<m.mapSize;++j)
             {
@@ -221,32 +252,17 @@ public class GamePanel extends JPanel implements Runnable
                 else if(m.map[i][j] == Symbols.WALL)
                     g.drawImage(wallPic, i * Params.gridSize , j * Params.gridSize, Params.gridSize,Params.gridSize, this);
 
-                else if(m.map[i][j] == Symbols.SNAKE2)
-                {
-                    if(m.s[1].getHead().x == i && m.s[1].getHead().y == j)
-                    {
-                        Region r;
-                        g.drawImage(head2, i * Params.gridSize , j * Params.gridSize, Params.gridSize,Params.gridSize, this);
-                        Coord temp = m.getNext(1);
-                        r = setRegion(1, temp);
-                        drawHead(head2, r, g);
-                    }
-                    else if(m.s[1].getTail().x == i && m.s[1].getTail().y == j)
-                    {
 
-                        Region r = setTailRegion(1, m.s[1].getTail());
-                        drawHead(bodyPic2, r, g);
-                    }
-                    else g.drawImage(bodyPic2, i * Params.gridSize , j * Params.gridSize, Params.gridSize,Params.gridSize, this);
-                }
             }
     }
 
 
     public void run()
     {
-        Thread commT = new Thread(new CommThread(m));
-        commT.start();
+        if(Params.ifComm) {
+            Thread commT = new Thread(new CommThread(m));
+            commT.start();
+        }
         while(m.gameContinue)
         {
             if(!m.stopped) {

@@ -65,11 +65,17 @@ public class Snake
                         if(dir != Direction.LEFT)
                         {
                             //goed = false;
-                            try {
-
-                                Map.toServer.writeBytes("1" + "\n");
-
-                            } catch (IOException e){}
+                            if(Params.ifComm) {
+                                try {
+                                    Map.toServer.writeBytes("1" + "\n");
+                                } catch (IOException e) {
+                                }
+                            }
+                            else
+                            {
+                                goed = false;
+                                dir = Direction.LEFT;
+                            }
 
                         }
                         //dir = Direction.LEFT;
@@ -79,9 +85,17 @@ public class Snake
                     if (dir != Direction.LEFT && goed) {
                         if(dir != Direction.RIGHT)
                         {
-                            try {
-                                Map.toServer.writeBytes("2\n");
-                            } catch (IOException e){}
+                            if(Params.ifComm) {
+                                try {
+                                    Map.toServer.writeBytes("2\n");
+                                } catch (IOException e) {
+                                }
+                            }
+                            else
+                            {
+                                goed = false;
+                                dir = Direction.RIGHT;
+                            }
                         }
                             //goed = false;
                         //dir = Direction.RIGHT;
@@ -91,10 +105,19 @@ public class Snake
                     if (dir != Direction.DOWN && goed) {
                         if(dir != Direction.UP)
                         {
-                            try {
-                                Map.toServer.writeBytes("3" + "\n");
-                                System.out.println("send 3 " + Symbols.SNAKE1);
-                            } catch (IOException e){System.out.println("fail to send 3 1");}
+                            if(Params.ifComm) {
+                                try {
+                                    Map.toServer.writeBytes("3" + "\n");
+                                    System.out.println("send 3 " + Symbols.SNAKE1);
+                                } catch (IOException e) {
+                                    System.out.println("fail to send 3 1");
+                                }
+                            }
+                            else
+                            {
+                                goed = false;
+                                dir = Direction.UP;
+                            }
                         }
                         //dir = Direction.UP;
                     }
@@ -103,9 +126,17 @@ public class Snake
                     if (dir != Direction.UP && goed) {
                         if(dir != Direction.DOWN)
                         {
-                            try {
-                                Map.toServer.writeBytes("4\n");
-                            } catch (IOException e){}
+                            if(Params.ifComm) {
+                                try {
+                                    Map.toServer.writeBytes("4\n");
+                                } catch (IOException e) {
+                                }
+                            }
+                            else
+                            {
+                                goed = false;
+                                dir = Direction.DOWN;
+                            }
                         }
                         //dir = Direction.DOWN;
                     }
@@ -122,9 +153,17 @@ public class Snake
                     {
                         if(dir != Direction.LEFT)
                         {
-                            try {
-                                Map.toServer.writeBytes("11\n");
-                            } catch (IOException e){}
+                            if(Params.ifComm) {
+                                try {
+                                    Map.toServer.writeBytes("11\n");
+                                } catch (IOException e) {
+                                }
+                            }
+                            else
+                            {
+                                goed = false;
+                                dir = Direction.LEFT;
+                            }
                         }
                         //dir = Direction.LEFT;
                     }
@@ -133,9 +172,17 @@ public class Snake
                     if (dir != Direction.LEFT && goed) {
                         if(dir != Direction.RIGHT)
                         {
-                            try {
-                                Map.toServer.writeBytes("12\n");
-                            } catch (IOException e){}
+                            if(Params.ifComm) {
+                                try {
+                                    Map.toServer.writeBytes("12\n");
+                                } catch (IOException e) {
+                                }
+                            }
+                            else
+                            {
+                                goed = false;
+                                dir = Direction.RIGHT;
+                            }
                         }
                         //dir = Direction.RIGHT;
                     }
@@ -144,11 +191,19 @@ public class Snake
                     if (dir != Direction.DOWN && goed) {
                         if(dir != Direction.UP)
                         {
-                            try {
-
-                                Map.toServer.writeBytes("13\n");
-                                System.out.println("send 13 " + Symbols.SNAKE2);
-                            } catch (IOException e){System.out.println("fail to send 13 2");}
+                            if(Params.ifComm) {
+                                try {
+                                    Map.toServer.writeBytes("13\n");
+                                    System.out.println("send 13 " + Symbols.SNAKE2);
+                                } catch (IOException e) {
+                                    System.out.println("fail to send 13 2");
+                                }
+                            }
+                            else
+                            {
+                                goed = false;
+                                dir = Direction.UP;
+                            }
                         }
                         //dir = Direction.UP;
                     }
@@ -157,9 +212,17 @@ public class Snake
                     if (dir != Direction.UP && goed) {
                         if(dir != Direction.DOWN)
                         {
-                            try {
-                                Map.toServer.writeBytes("14\n");
-                            } catch (IOException e){}
+                            if(Params.ifComm) {
+                                try {
+                                    Map.toServer.writeBytes("14\n");
+                                } catch (IOException e) {
+                                }
+                            }
+                            else
+                            {
+                                goed = false;
+                                dir = Direction.DOWN;
+                            }
                         }
                         //dir = Direction.DOWN;
                     }

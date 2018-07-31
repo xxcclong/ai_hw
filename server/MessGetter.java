@@ -3,7 +3,7 @@ package server;
 import java.io.IOException;
 
 class MessGetter {
-    public synchronized void get(int id) {
+    public void get(int id) {
         try {
             if (id == 0)
                 Server.mess = Integer.parseInt(ServerThread.fromClient1.readLine());
@@ -16,7 +16,7 @@ class MessGetter {
         notify();
     }
 
-    public synchronized void send() {
+    public void send() {
         try {
             wait();
             System.out.println("finish waiting");
